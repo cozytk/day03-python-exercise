@@ -136,8 +136,14 @@ def get_departments_with_min_employees(conn: sqlite3.Connection,
 def complex_query(conn: sqlite3.Connection,
                   department: str,
                   min_salary: int) -> List[Tuple]:
-    # TODO: WHERE, AND, ORDER BY 조합
-    pass
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT name, position, salary
+        FROM employees
+        WHERE department = ? AND salary >= ?
+        ORDER BY salary DESC
+    """, (department, min_salary))
+    return cursor.fetchall()
 
 
 def setup_test_data(conn: sqlite3.Connection) -> None:
