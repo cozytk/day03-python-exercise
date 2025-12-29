@@ -1,0 +1,28 @@
+name: Python Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build and test with Docker Compose
+      run: |
+        docker compose build
+        docker compose run --rm test
+
+    - name: Test Summary
+      if: always()
+      run: |
+        echo "=========================================="
+        echo "테스트 결과를 확인하세요!"
+        echo "모든 테스트가 통과하면 과제 완료입니다 ✅"
+        echo "=========================================="
