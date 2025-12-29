@@ -97,19 +97,40 @@ def select_employees_ordered(conn: sqlite3.Connection,
 
 
 def count_employees_by_department(conn: sqlite3.Connection) -> List[Tuple]:
-    # TODO: GROUP BY와 COUNT를 사용하여 부서별 집계
-    pass
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT department, COUNT(*) AS count
+        FROM employees
+        GROUP BY department
+    """)
+    return cursor.fetchall()
 
 
 def get_salary_stats_by_department(conn: sqlite3.Connection) -> List[Tuple]:
-    # TODO: GROUP BY와 집계 함수들 사용
-    pass
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT
+            department,
+            COUNT(*) AS count,
+            AVG(salary) AS avg_salary,
+            MIN(salary) AS min_salary,
+            MAX(salary) AS max_salary
+        FROM employees
+        GROUP BY department
+    """)
+    return cursor.fetchall()
 
 
 def get_departments_with_min_employees(conn: sqlite3.Connection,
                                        min_count: int) -> List[Tuple]:
-    # TODO: HAVING을 사용하여 그룹 필터링
-    pass
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT department, COUNT(*) AS count
+        FROM employees
+        GROUP BY department
+        HAVING COUNT(*) >= ?
+    """, (min_count,))
+    return cursor.fetchall()
 
 
 def complex_query(conn: sqlite3.Connection,
